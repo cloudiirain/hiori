@@ -1,0 +1,8 @@
+{
+  "url" : {
+    "login": "https://forum.novelupdates.com/login/",
+    "logout": "https://forum.novelupdates.com/logout/",
+    "thread": "https://forum.novelupdates.com/threads/",
+    "thread_reply_sfx": "reply/"
+  }
+}
