@@ -1,5 +1,7 @@
 'use strict';
 
+const url = require('url');
+const puppeteer = require('puppeteer');
 const config = require('./config.json');
 
 /**
@@ -7,23 +9,53 @@ const config = require('./config.json');
  */
 module.exports = class Hiori {
   /**
-   * Initiate hiori bot instance.
    * @param {string} username
    * @param {string} password
-   * @param {object} config
    */
-  constructor(username, password, config=config) {
+  constructor (username, password) {
     this.username = username;
     this.password = password;
     this.config = config;
-    this.isLoggedIn = false;
+  }
+
+  /**
+   * @param {function} callback
+   */
+  async init (callback) {
+    this.browser = await puppeteer.launch({headless: false});
+    this.page = await this.browser.newPage();
+    callback.bind(this)();
+  }
+
+  /* Close haori bot instance */
+  close () {
+    this.browser.close();
   }
 
   /* Login to NUF. */
-  login () {}
+  async login () {
+    const response = await this.page.goto(this.config.url.login);
+    if (response.status() != 200) {
+      throw new Error('Unable to load login page');
+    }
+    // We check for any re-directs here because the user is automatically
+    // redirected to the home page if the user is already logged in.
+    if (response.url() == this.config.url.login) {
+      await this.page.type('#ctrl_pageLogin_login', this.username);
+      await this.page.type('#ctrl_pageLogin_password', this.password);
+      const [redirect] = await Promise.all([
+        this.page.waitForNavigation(),
+        this.page.click('#pageLogin input[type="submit"]')
+      ]);
+      // Throw an error if NUF did not redirect user to home.
+      if (redirect.url() != this.config.url.home) {
+        throw new Error('Login credentials invalid.');
+      }
+    }
+  }
 
   /* Logout of NUF. */
-  logout () {}
+  async logout() {}
 
   /**
    * Fetch a thread and return posts.

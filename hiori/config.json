@@ -1,5 +1,6 @@
 {
   "url" : {
+    "home": "https://forum.novelupdates.com/",
     "login": "https://forum.novelupdates.com/login/",
     "logout": "https://forum.novelupdates.com/logout/",
     "thread": "https://forum.novelupdates.com/threads/",
