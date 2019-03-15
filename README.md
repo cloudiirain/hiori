@@ -1,3 +1,31 @@
+## Vignettes
+
+```javascript
+/**
+ * Fetch all commands made to a thread after a postID
+ */
+ const Hiori = require('hiori');
+ var bot = new Hiori(process.argv[2], process.argv[3]);
+ bot.init(async () => {
+   const cmds = await bot.fetchThreadCommandsSince('4785847');
+   console.log(cmds);
+   bot.close();
+ });
+```
+
+```javascript
+/**
+ * Reply to a thread
+ */
+const Hiori = require('hiori');
+var bot = new Hiori(process.argv[2], process.argv[3]);
+bot.init(async () => {
+  await bot.login();
+  await bot.replyThread('83398', 'Hello World!');
+  bot.close();
+});
+```
+
 ## Project Roadmap
 
 * Build bot module
