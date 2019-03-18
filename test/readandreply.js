@@ -1,4 +1,4 @@
-const Hiori = require('../index.js');
+const { Hiori } = require('../index.js');
 
 const username = process.argv[2];
 const password = process.argv[3];
@@ -13,7 +13,7 @@ bot.init(async () => {
     await total;
     await cmd;
     if (true) {
-      const quote = Hiori.bbCodeQuote(cmd);
+      const quote = Hiori.bbCodeQuote(cmd.value);
       return await total + quote + `Boop! I see you, ${cmd.user}!\n`
     } else {
       return await total;

@@ -1,47 +1,62 @@
-const cheerio = require('cheerio');
-const Hiori = require('../index.js');
-
+const { Hiori } = require('../index.js');
+const ThreadPost = require('../lib/ThreadPost.js');
 
 const username = process.argv[2];
 const password = process.argv[3];
 const bot = new Hiori(username, password);
+
 bot.init(async () => {
 
-  await bot.goTo('https://forum.novelupdates.com/');
-  const html = await bot.page.content();
-  const $ = await cheerio.load(html);
-  const userInput = $('#ctrl_pageLogin_login').length;
-  const pswdInput = $('#ctrl_pageLogin_password').length;
-  const submtInput = $('#pageLogin input[type="submit"]').length;
-  if (!userInput || !pswdInput || !submtInput) {
-    console.log('bad!');
+
+  // Let's find out the most recent post in this thread
+  const url = 'https://forum.novelupdates.com/threads/lets-make-a-dungeon-crawler.63096';
+  const allPosts = await bot.fetchThreadPosts(url, true);
+  const lastPost = allPosts.slice(-1)[0];
+  const lastPostID = lastPost.pid;
+
+  // Wait for 60 seconds... do something else
+  // sleep(60)
+
+  // Let's check if there are any new new posts with commands
+  const newPosts = await bot.fetchThreadPostsSince(lastPostID);
+  const newCommandPosts = newPosts.reduce((accumulator, post) => {
+    const postJSON = post.toJSON();
+    if (postJSON.pid > lastPostID && postJSON.cmds.length) {
+      accumulator.push(postJSON);
+    }
+    return accumulator;
+  }, []);
+
+  // Let's respond to the NUF thread
+  if (newCommandPosts) {
+    const reply = `I detected ${newCommandPosts.length} new posts with commands!\n`;
+    console.log(reply);
+    //await bot.replyThread(83398, reply);
   }
 
 
-  await bot.login();
 
-  console.log(await bot.isLoggedIn());
+  //console.log(listOfPostIds);
 
-  //console.log(bot.page.url());
+  //const url = 'https://forum.novelupdates.com/threads/lets-make-a-dungeon-crawler.63096/page-2';
 
-  //await bot.login();
-  /*
-  const cmds = await bot.fetchThreadCommandsSince(4792168);
-  const initialText = 'Test Test~\n\n';
-  console.log(cmds);
-  const text = await cmds.reduce(async (total, cmd) => {
-    await total;
-    await cmd;
-    if (true) {
-      const quote = Hiori.bbCodeQuote(cmd);
-      return await total + quote + `Boop! I see you, ${cmd.user}!\n`
-    } else {
-      return await total;
-    }
-  }, Promise.resolve(initialText));
-  console.log(Hiori.stripUserCode(text));
-  */
-  //await bot.replyThread('83398', text);
+  // Fetch all posts in this thread starting from the given URL
+  //const threadPosts = await bot.fetchThreadPosts(url, true);
+
+  // Select the last post
+  //const lastThreadPost = threadPosts.slice(-1)[0];
+
+  // Get the text of the last post (with quotes/spoilers removed)
+  //const text = lastThreadPost.getText(true);
+  //console.log(text);
+
+  // Get the commands in the last posts
+  //const commands = lastThreadPost.getCommands();
+  //const reply = `I detected ${commands.length} commands in the last post!\n`;
+  //console.log(reply);
+
+  //Uncomment the next line to actually post to NUF
+  //await bot.replyThread(83398, reply);
 
   bot.close();
 });

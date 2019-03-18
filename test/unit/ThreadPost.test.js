@@ -11,8 +11,7 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 const expect = chai.expect;
 
-const ThreadPost = require('../../lib/ThreadPost.js');
-const { ParserError } = require('../../lib/error.js');
+const { ThreadPost, ParserError } = require('../../index.js');
 
 // Load fixtures
 const goodHTML = fs.readFileSync('test/unit/fixtures/ThreadPost.html', 'utf8');
