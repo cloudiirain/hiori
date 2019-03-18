@@ -7,7 +7,10 @@ const bot = new Hiori(username, password);
 
 bot.init(async () => {
 
+  const lastPage = await bot.fetchThreadLastPageURL(63096);
+  console.log(lastPage);
 
+  /*
   // Let's find out the most recent post in this thread
   const url = 'https://forum.novelupdates.com/threads/lets-make-a-dungeon-crawler.63096';
   const allPosts = await bot.fetchThreadPosts(url, true);
@@ -33,7 +36,7 @@ bot.init(async () => {
     console.log(reply);
     //await bot.replyThread(83398, reply);
   }
-
+  */
 
 
   //console.log(listOfPostIds);
