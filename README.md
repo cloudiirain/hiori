@@ -1,3 +1,8 @@
+## Dependencies
+
+* Testing:
+   * Test with mocha
+
 ## Vignettes
 
 ```javascript

@@ -6,7 +6,7 @@ const bot = new Hiori(username, password);
 bot.init(async () => {
 
   //await bot.login();
-  const cmds = await bot.fetchThreadCommandsSince(4789731);
+  const cmds = await bot.fetchThreadCommandsSince(4792168);
   const initialText = 'Test Test~\n\n';
   console.log(cmds);
   const text = await cmds.reduce(async (total, cmd) => {
