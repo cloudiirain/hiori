@@ -58,11 +58,37 @@ describe('Hiori', function () {
 
   });
 
-  describe('fetchAllThreadPosts', function () {
+  describe('fetchThreadPosts', function () {
 
     it('should throw a NotFoundError if the thread page doesn\'t exist');
 
     it('should throw a ParserError if the thread page HTML is bad');
+
+  });
+
+  describe('fetchThreadPostsSince', function () {
+
+    it('should throw a NotFoundError if the thread post doesn\'t exist');
+
+    it('should return a list of ThreadPostJSON');
+
+    it('should not return posts older than the specified postID');
+
+  });
+
+  describe('fetchThreadCommandsSince', function () {
+
+    it('should return a list of DetailedCommands with post context');
+
+    it('the first command should have a null prevPost');
+
+  });
+
+  describe('fetchThreadLastPageURL', function () {
+
+    it('should return the URL of the last page in a thread series');
+
+    it('should return false if no last page could be detected');
 
   });
 
@@ -80,16 +106,6 @@ describe('Hiori', function () {
 
   });
 
-  describe('bbCodeQuote', function () {
-
-    it('create a BBCode quote with the provided parameters', function () {
-      const str = Hiori.bbCodeQuote('hi', 'hiori', 123, 12345);
-      const exp = '[QUOTE="hiori, post: 12345, member: 123"]hi[/QUOTE]\n';
-      expect(str).to.be.equal(exp);
-    });
-
-  });
-
   describe('decodeUserstr', function () {
 
     it('should convert an @USER:1234|Username string to a user object', function () {
@@ -103,17 +119,6 @@ describe('Hiori', function () {
       const str = '@USER:1234|Hello&nbsp;I&nbsp;Am&nbsp;A&nbsp;Tree';
       const obj = Hiori.decodeUserstr(str);
       expect(obj.user).to.be.equal('Hello I Am A Tree');
-    });
-
-  });
-
-  describe('stripUserCode', function () {
-
-    it('should strip all @USER:1234|Username strings from text', function () {
-      const txt = 'Hi, @USER:1234|hiori. Goodbye, @USER:1234|Hello&nbsp;I&nbsp;Am&nbsp;A&nbsp;Tree.'
-      const exp = 'Hi, @hiori. Goodbye, @Hello I Am A Tree.';
-      const strip = Hiori.stripUserCode(txt);
-      expect(strip).to.be.equal(exp);
     });
 
   });
